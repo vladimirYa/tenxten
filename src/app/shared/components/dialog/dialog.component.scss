@@ -1,0 +1,54 @@
+:host {
+  pointer-events: none;
+}
+
+.dialog {
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: auto;
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+  }
+
+  &__container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__panel {
+    width: min(90vw, 560px);
+    max-height: calc(100dvh - 48px);
+    overflow: auto;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow:
+      0 16px 40px rgba(15, 23, 42, 0.24),
+      0 6px 16px rgba(15, 23, 42, 0.18);
+  }
+}
+
+@media (max-width: 640px) {
+  .dialog {
+    &__overlay {
+      padding: 12px;
+    }
+
+    &__panel {
+      max-height: calc(100dvh - 24px);
+      border-radius: 12px;
+    }
+  }
+}

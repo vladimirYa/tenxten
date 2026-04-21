@@ -1,0 +1,55 @@
+<section class="game">
+  <div class="game__playground">
+    <div class="game__scoreboard">
+      <div class="game__score-item">
+        <span class="game__score-label">Player</span>
+        <strong class="game__score-value">{{ playerScore() }}</strong>
+      </div>
+      <div class="game__score-item">
+        <span class="game__score-label">Computer</span>
+        <strong class="game__score-value">{{ computerScore() }}</strong>
+      </div>
+    </div>
+
+    <div class="game__field" (click)="onFieldClick($event)">
+      @for (cell of cellsLookup | keyvalue; track cell.key) {
+        <div
+          class="game__cell"
+          [attr.data-cell-id]="cell.key"
+          [class.game__cell--default]="cell.value.status === 'default'"
+          [class.game__cell--pending]="cell.value.status === 'pending'"
+          [class.game__cell--success]="cell.value.status === 'success'"
+          [class.game__cell--fail]="cell.value.status === 'fail'"
+        ></div>
+      }
+    </div>
+  </div>
+
+  <form class="form">
+    <label class="form__label" for="roundDurationMs">Round duration (ms)</label>
+    <input
+      class="form__input"
+      type="number"
+      placeholder="5000 e.g."
+      [formField]="gameParamsForm.roundDurationMs"
+    />
+
+    @if (gameParamsForm.roundDurationMs().touched() && gameParamsForm.roundDurationMs().invalid()) {
+      <p class="error">Please set round duration</p>
+    }
+
+    <div class="form__actions">
+      <button
+        class="form__button form__button--start"
+        type="button"
+        [disabled]="!canStartGame()"
+        (click)="startGame()"
+      >
+        Start game
+      </button>
+      <button class="form__button form__button--reset" type="button" (click)="resetGame()">
+        Reset game
+      </button>
+    </div>
+  </form>
+</section>

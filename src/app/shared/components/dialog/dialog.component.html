@@ -1,0 +1,22 @@
+@if (dialogState$ | async; as dialog) {
+  <div class="dialog__overlay">
+    @if (dialog.config.hasBackdrop !== false) {
+      <div
+        class="dialog__backdrop"
+        [ngClass]="dialog.config.backdropClass"
+        (click)="onBackdropClick()"
+      ></div>
+    }
+
+    <div class="dialog__container">
+      <div
+        class="dialog__panel"
+        [ngClass]="dialog.config.panelClass"
+      >
+        <ng-container
+          *ngComponentOutlet="dialog.component; injector: dialog.injector"
+        ></ng-container>
+      </div>
+    </div>
+  </div>
+}
