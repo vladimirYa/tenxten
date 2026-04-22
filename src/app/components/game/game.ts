@@ -8,7 +8,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, form, min, required } from '@angular/forms/signals';
 import { DialogService } from '../../shared/components/dialog';
 import { WinnerDialog } from './dialogs/winner/winner';
 
@@ -39,10 +39,14 @@ export class GameComponent implements OnInit {
   gameParamsModel = signal<GameParams>({ roundDurationMs: null });
   gameParamsForm = form(this.gameParamsModel, (fields) => {
     required(fields.roundDurationMs);
+    min(fields.roundDurationMs, 1);
   });
 
   isGameStarted = signal(false);
-  canStartGame = computed(() => this.gameParamsModel().roundDurationMs !== null);
+  canStartGame = computed(() => {
+    const roundDurationMs = this.gameParamsModel().roundDurationMs;
+    return roundDurationMs !== null && roundDurationMs > 0;
+  });
   playerScore = signal(0);
   computerScore = signal(0);
   activeCellIndex = signal<number | null>(null);
@@ -118,7 +122,7 @@ export class GameComponent implements OnInit {
     this.cdr.markForCheck();
 
     const roundDurationMs = this.gameParamsForm.roundDurationMs().value();
-    if (!roundDurationMs) {
+    if (!roundDurationMs || roundDurationMs <= 0) {
       return;
     }
 

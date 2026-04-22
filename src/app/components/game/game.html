@@ -35,7 +35,7 @@
     />
 
     @if (gameParamsForm.roundDurationMs().touched() && gameParamsForm.roundDurationMs().invalid()) {
-      <p class="error">Please set round duration</p>
+      <p class="error">Please set a positive round duration</p>
     }
 
     <div class="form__actions">
