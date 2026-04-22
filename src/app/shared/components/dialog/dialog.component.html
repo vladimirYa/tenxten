@@ -1,22 +1,41 @@
-@if (dialogState$ | async; as dialog) {
-  <div class="dialog__overlay">
-    @if (dialog.config.hasBackdrop !== false) {
-      <div
-        class="dialog__backdrop"
-        [ngClass]="dialog.config.backdropClass"
-        (click)="onBackdropClick()"
-      ></div>
-    }
+@if (isDialogsExists) {
+  <div class="dialog-wrapper">
+    <div class="background"></div>
 
-    <div class="dialog__container">
-      <div
-        class="dialog__panel"
-        [ngClass]="dialog.config.panelClass"
-      >
-        <ng-container
-          *ngComponentOutlet="dialog.component; injector: dialog.injector"
-        ></ng-container>
+    @for (dialog of dialogs; track dialog.injector; let last = $last) {
+      <div class="dialog" [style.width]="dialog.size" [ngClass]="{ hidden: !last }">
+        <div class="dialog__header" [class.dialog__header--no-title]="dialog.title === ''">
+          @if (dialog.title !== '') {
+            <div class="dialog__title">{{ dialog.title }}</div>
+          }
+
+          <button class="dialog__close" type="button" (click)="close()">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              width="16"
+              height="16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 5L15 15M15 5L5 15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="dialog__content">
+          @if (dialog.injector) {
+            <ng-container
+              *ngComponentOutlet="dialog.component; injector: dialog.injector"
+            ></ng-container>
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
 }

@@ -1,68 +1,29 @@
-import { Injectable, Injector, Type } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { DIALOG_DATA, DIALOG_HANDLE } from './dialog.tokens';
-import { ActiveDialog, DialogConfig, DialogHandle } from './dialog.types';
+import { Injectable } from '@angular/core';
+import { DialogComponent } from './dialog.component';
+import { DialogSize } from './dialog-sizes';
 
-@Injectable({ providedIn: 'root' })
+export interface DialogConfig {
+  component: any;
+  size?: DialogSize;
+  data?: any;
+  title: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class DialogService {
-  private readonly dialogStateSubject = new BehaviorSubject<ActiveDialog | null>(null);
+  dialogComponentRef!: DialogComponent;
 
-  readonly dialogState$: Observable<ActiveDialog | null> =
-    this.dialogStateSubject.asObservable();
-
-  constructor(private readonly injector: Injector) {}
-
-  get activeDialog(): ActiveDialog | null {
-    return this.dialogStateSubject.value;
+  init(dialog: DialogComponent): void {
+    this.dialogComponentRef = dialog;
   }
 
-  open<TComponent, TResult = unknown, TData = unknown>(
-    component: Type<TComponent>,
-    config: DialogConfig<TData> = {}
-  ): DialogHandle<TResult> {
-    this.close();
-
-    let closed = false;
-    let dialogHandle!: DialogHandle<TResult>;
-    dialogHandle = {
-      close: (result?: TResult) => {
-        if (closed) {
-          return;
-        }
-
-        closed = true;
-        if (this.dialogStateSubject.value?.ref === (dialogHandle as DialogHandle<unknown>)) {
-          this.dialogStateSubject.next(null);
-        }
-      }
-    };
-
-    const dialogHandleAsUnknown = dialogHandle as DialogHandle<unknown>;
-
-    const dialogInjector = Injector.create({
-      parent: this.injector,
-      providers: [
-        { provide: DIALOG_HANDLE, useValue: dialogHandle },
-        { provide: DIALOG_DATA, useValue: config.data ?? null }
-      ]
-    });
-
-    this.dialogStateSubject.next({
-      component,
-      injector: dialogInjector,
-      config,
-      ref: dialogHandleAsUnknown
-    });
-
-    return dialogHandle;
+  openDialog<CData = any>(config: DialogConfig) {
+    return this.dialogComponentRef.open<CData>(config);
   }
 
-  close<TResult = unknown>(result?: TResult): void {
-    const dialog = this.dialogStateSubject.value;
-    if (!dialog) {
-      return;
-    }
-
-    dialog.ref.close(result);
+  closeDialog(data: any = {}): void {
+    this.dialogComponentRef.close(data);
   }
 }

@@ -9,6 +9,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
+import { DialogService } from '../../shared/components/dialog';
+import { WinnerDialog } from './dialogs/winner/winner';
 
 interface GameParams {
   roundDurationMs: number | null;
@@ -47,6 +49,7 @@ export class GameComponent implements OnInit {
 
   private roundTimerId: ReturnType<typeof setTimeout> | null = null;
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly dialogService = inject(DialogService);
 
   constructor() {}
 
@@ -152,6 +155,13 @@ export class GameComponent implements OnInit {
     }
 
     this.isGameStarted.set(false);
+    this.dialogService.openDialog<{ isPlayerWinner: boolean }>({
+      component: WinnerDialog,
+      title: 'Game results',
+      data: {
+        isPlayerWinner: this.playerScore() > this.computerScore(),
+      },
+    });
     return true;
   }
 

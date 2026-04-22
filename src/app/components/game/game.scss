@@ -11,23 +11,24 @@
 }
 
 .game {
-  position: relative;
-  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  overflow: hidden;
+  gap: 16px;
+  padding: 16px;
 
   &__playground {
+    width: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
   }
 
   &__scoreboard {
-    width: 680px;
+    width: 100%;
     display: flex;
     gap: 8px;
   }
@@ -56,11 +57,12 @@
   }
 
   &__field {
-    width: 680px;
-    height: 680px;
+    width: 600px;
+    height: 600px;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    justify-content: space-between;
+    gap: 2px;
     padding: 10px;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.56);
@@ -71,8 +73,6 @@
   }
 
   &__cell {
-    width: calc((100% - 54px) / 10);
-    aspect-ratio: 1 / 1;
     border-radius: 8px;
     border: 1px solid rgba(15, 23, 42, 0.08);
     display: flex;
@@ -83,7 +83,8 @@
     color: rgba(15, 23, 42, 0.55);
     user-select: none;
     transition: background-color 0.18s ease;
-
+    width: 56px;
+    height: 56px;
     &--default {
       background: #9fd8ff;
     }
@@ -103,12 +104,8 @@
 }
 
 .form {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  width: 380px;
-  max-width: calc(100% - 24px);
+  order: -1;
+  width: 300px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -161,5 +158,46 @@
       background: rgba(15, 23, 42, 0.12);
       color: #253143;
     }
+  }
+}
+
+@media (max-width: 1280px) {
+  .game {
+    &__playground {
+      width: 500px;
+    }
+
+    &__field {
+      width: 500px;
+      height: 500px;
+    }
+
+    &__cell {
+      width: 46px;
+      height: 46px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .game {
+    flex-direction: column;
+
+    &__playground {
+      width: 400px;
+    }
+
+    &__field {
+      width: 400px;
+      height: 400px;
+    }
+
+    &__cell {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  .form {
+    width: 400px;
   }
 }

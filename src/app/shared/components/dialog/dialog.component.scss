@@ -1,54 +1,87 @@
-:host {
-  pointer-events: none;
+.dialog-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.34);
 }
 
 .dialog {
-  &__overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 24px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+
+  &.hidden {
+    display: none;
+  }
+
+  &__header {
+    min-height: 52px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.52);
+
+    &--no-title {
+      justify-content: flex-end;
+    }
+  }
+
+  &__title {
+    color: #263245;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  &__close {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    padding: 24px;
-    pointer-events: auto;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(15, 23, 42, 0.16);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #253143;
+    cursor: pointer;
+    transition:
+      background-color 0.18s ease,
+      transform 0.18s ease;
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.08);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
   }
 
-  &__backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.55);
-  }
-
-  &__container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  &__panel {
-    width: min(90vw, 560px);
-    max-height: calc(100dvh - 48px);
+  &__content {
+    padding: 12px 14px;
     overflow: auto;
-    border-radius: 16px;
-    background: #fff;
-    box-shadow:
-      0 16px 40px rgba(15, 23, 42, 0.24),
-      0 6px 16px rgba(15, 23, 42, 0.18);
-  }
-}
-
-@media (max-width: 640px) {
-  .dialog {
-    &__overlay {
-      padding: 12px;
-    }
-
-    &__panel {
-      max-height: calc(100dvh - 24px);
-      border-radius: 12px;
-    }
   }
 }
