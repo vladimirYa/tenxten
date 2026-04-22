@@ -1,59 +1,61 @@
 # Tenxten
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+A small Angular 21 game: a 10x10 board, player/computer scores, round settings form, and a result dialog.
 
-## Development server
+## What was implemented
 
-To start a local development server, run:
+- Built the game screen with board, scoreboard, and round settings form.
+- Added a modal dialog to show game results.
 
-```bash
-ng serve
-```
+## Components and modules
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- `App` (`src/app/app.ts`)  
+  Root shell that renders `router-outlet` and shared `app-dialog`.
 
-## Code scaffolding
+- `GameComponent` (`src/app/components/game/game.ts`)  
+  Core game logic: round start, click handling, score updates, and state reset.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `WinnerDialog` (`src/app/components/game/dialogs/winner/winner.ts`)  
+  Modal content that shows the result text (`You won!` / `Computer wins!`).
 
-```bash
-ng generate component component-name
-```
+- `DialogComponent` (`src/app/shared/components/dialog/dialog.component.ts`)  
+  Generic modal container that renders a passed component and closes the dialog.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- `DialogService` (`src/app/shared/components/dialog/dialog.service.ts`)  
+  API for opening/closing dialogs (`openDialog`, `closeDialog`).
 
-```bash
-ng generate --help
-```
+## Applied optimizations
 
-## Building
+- Lazy loading for the game route  
+  `src/app/app.routes.ts` uses `loadComponent` for `GameComponent`, so the screen is loaded lazily.
 
-To build the project run:
+- `ChangeDetectionStrategy.OnPush`  
+  Enabled in `GameComponent` and `DialogComponent` to reduce unnecessary change detection runs.
 
-```bash
-ng build
-```
+- Lookup structures (`Map`)  
+  `Map` is used for cell state and available indices:
+  - `cellsLookup: Map<number, Cell>`
+  - `availableCellsLookup: Map<number, true>`
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Bubbling handler (event delegation)  
+  A single click handler is attached to the board container (`game__field`), and the actual cell is resolved via `event.target` + `closest('.game__cell')`.
 
-## Running unit tests
+- Signals and computed values  
+  Angular Signals (`signal`, `computed`) are used for reactive state, simplifying UI updates and reducing extra coupling.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Run locally
 
 ```bash
-ng e2e
+npm install
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The app will be available at `http://localhost:4200`.
 
-## Additional Resources
+## Docker deployment on server
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+docker compose up -d --build
+```
+
+After startup, the app is available on host port `8080`.

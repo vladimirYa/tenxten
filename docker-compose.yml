@@ -1,0 +1,9 @@
+services:
+  tenxten:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tenxten
+    restart: unless-stopped
+    ports:
+      - "8080:80"
