@@ -51,11 +51,3 @@ npm start
 ```
 
 The app will be available at `http://localhost:4200`.
-
-## Docker deployment on server
-
-```bash
-docker compose up -d --build
-```
-
-After startup, the app is available on host port `8080`.
